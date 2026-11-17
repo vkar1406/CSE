@@ -8,7 +8,13 @@ async function hmac(secret, message) {
 export async function onRequest(context) {
   const {request,env,next} = context;
   const path = new URL(request.url).pathname;
-  if (path === '/login.html' || path === '/api/login' || path === '/favicon.ico') return next();
+if (
+  path === '/login' ||
+  path === '/login/' ||
+  path === '/login.html' ||
+  path === '/api/login' ||
+  path === '/favicon.ico'
+) return next();
   if (!env.APP_PASSWORD || !env.OPENAI_API_KEY) return new Response('Set APP_PASSWORD and OPENAI_API_KEY in Cloudflare Pages settings.',{status:503});
   const cookie = request.headers.get('Cookie')||'';
   const token = cookie.split(';').map(x=>x.trim()).find(x=>x.startsWith('copilot_session='))?.slice('copilot_session='.length);
